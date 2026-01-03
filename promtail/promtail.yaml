@@ -1,0 +1,51 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # SSH / Auth logs
+  - job_name: auth
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: auth
+          host: ${HOSTNAME}
+          __path__: /var/log/auth.log
+
+    pipeline_stages:
+      # Extract sshd specific logs
+      - match:
+          selector: '{job="auth"}'
+          stages:
+            - regex:
+                expression: '(?P<timestamp>\w+\s+\d+\s+\d+:\d+:\d+)\s+(?P<hostname>\S+)\s+(?P<service>\S+?)(\[(?P<pid>\d+)\])?:\s+(?P<message>.*)'
+            - labels:
+                service:
+                hostname:
+            - timestamp:
+                source: timestamp
+                format: "Jan _2 15:04:05"
+
+  # Syslog
+  - job_name: syslog
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: syslog
+          host: ${HOSTNAME}
+          __path__: /var/log/syslog
+
+    pipeline_stages:
+      - regex:
+          expression: '(?P<timestamp>\w+\s+\d+\s+\d+:\d+:\d+)\s+(?P<hostname>\S+)\s+(?P<service>\S+?)(\[(?P<pid>\d+)\])?:\s+(?P<message>.*)'
+      - labels:
+          service:
+          hostname:

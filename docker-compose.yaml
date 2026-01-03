@@ -1,4 +1,11 @@
-version: "3.9"
+# Create a docker-compose.yml file with the following content:
+#  - influxdb2 database
+#  - grafana 
+#  -  grafana loki server
+# Add grafana configuration to use loki as datasource
+# Add grafana configuration to use github oauth
+
+
 
 services:
   influxdb:
@@ -12,7 +19,6 @@ services:
     ports:
       - 8086:8086
     restart: always
-    privileged: true
 
   grafana:
     container_name: grafana
@@ -24,8 +30,6 @@ services:
       - ./grafana/etc:/etc/grafana:ro
       - grafana-lib:/var/lib/grafana
       - grafana-log:/var/log/grafana
-    links:
-      - influxdb:influxdb
     env_file:
       # BE SURE TO CHANGE THIS LINE BEFORE GOING TO PRODUCTION
       - ./grafana.env
@@ -34,7 +38,67 @@ services:
     depends_on:
       - influxdb
     restart: always
-    privileged: true
+
+  loki:
+    container_name: loki
+    image: grafana/loki:3.3.2
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki/etc:/etc/loki:ro
+      - loki-data:/loki
+    ports:
+      - 3100:3100
+    restart: always
+
+  influxdb3:
+    container_name: influxdb3
+    image: influxdb:3-core
+    command:
+      - influxdb3
+      - serve
+      - --node-id=node0
+      - --object-store=file
+      - --data-dir=/var/lib/influxdb3
+    volumes:
+      - influxdb3-data:/var/lib/influxdb3
+    ports:
+      - 8181:8181
+    restart: always
+
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto:2
+    volumes:
+      - ./mosquitto/config:/mosquitto/config:ro
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
+    ports:
+      - 1883:1883
+      - 9001:9001
+    restart: always
+
+  telegraf:
+    container_name: telegraf
+    image: telegraf:1.33-alpine
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    env_file:
+      - ./influx3.env
+    depends_on:
+      - mosquitto
+      - influxdb3
+    restart: always
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:3.3.2
+    volumes:
+      - ./promtail/promtail.yaml:/etc/promtail/promtail.yaml:ro
+      - /var/log:/var/log:ro
+    command: -config.file=/etc/promtail/promtail.yaml
+    depends_on:
+      - loki
+    restart: always
 
 volumes:
   influxdb-lib:
@@ -44,4 +108,16 @@ volumes:
     external: false
 
   grafana-log:
+    external: false
+
+  loki-data:
+    external: false
+
+  influxdb3-data:
+    external: false
+
+  mosquitto-data:
+    external: false
+
+  mosquitto-log:
     external: false

@@ -7,3 +7,6 @@ influxdb/var/lib/wal
 
 # ignore generated configration file
 grafana/etc/provisioning/datasources/datasource.yaml
+
+# environment files with secrets
+influx3.env

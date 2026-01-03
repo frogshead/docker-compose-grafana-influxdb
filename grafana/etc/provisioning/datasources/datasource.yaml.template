@@ -12,3 +12,29 @@ datasources:
       organization: %%INFLUXDB_INIT_ORG%%
       defaultBucket: %%INFLUXDB_INIT_BUCKET%%
       tlsSkipVerify: true
+
+  - name: Loki
+    uid: loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+
+  - name: InfluxDB_v3_demo
+    type: influxdb
+    access: proxy
+    url: http://influxdb3:8181
+    jsonData:
+      version: SQL
+      database: demo
+    secureJsonData:
+      token: %%INFLUXDB3_AUTH_TOKEN%%
+
+  - name: InfluxDB_v3_ruuvi
+    type: influxdb
+    access: proxy
+    url: http://influxdb3:8181
+    jsonData:
+      version: SQL
+      database: ruuvi
+    secureJsonData:
+      token: %%INFLUXDB3_AUTH_TOKEN%%
