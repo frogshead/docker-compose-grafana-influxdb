@@ -1,0 +1,407 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10 },
+              { "color": "orange", "value": 25 },
+              { "color": "red", "value": 50 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "rawSql": "SELECT COUNT(DISTINCT device_mac) as device_count FROM ble_devices WHERE time >= now() - INTERVAL '5 minutes'",
+          "refId": "A",
+          "format": "table"
+        }
+      ],
+      "title": "Active Devices (5 min)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "rawSql": "SELECT COUNT(DISTINCT device_mac) as total_devices FROM ble_devices WHERE time >= now() - INTERVAL '24 hours'",
+          "refId": "A",
+          "format": "table"
+        }
+      ],
+      "title": "Total Devices (24h)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "purple", "value": null }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "rawSql": "SELECT COUNT(*) as sightings FROM ble_devices WHERE time >= now() - INTERVAL '1 hour'",
+          "refId": "A",
+          "format": "table"
+        }
+      ],
+      "title": "Sightings (1h)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Unique Devices",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "id": 3,
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "rawSql": "SELECT date_bin('5 minutes', time) AS time, COUNT(DISTINCT device_mac) AS unique_devices FROM ble_devices WHERE $__timeFilter(time) GROUP BY date_bin('5 minutes', time) ORDER BY time",
+          "refId": "A",
+          "format": "time_series"
+        }
+      ],
+      "title": "Device Count Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Total Sightings",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 50,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "id": 9,
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "rawSql": "SELECT date_bin('5 minutes', time) AS time, COUNT(*) AS sightings FROM ble_devices WHERE $__timeFilter(time) GROUP BY date_bin('5 minutes', time) ORDER BY time",
+          "refId": "A",
+          "format": "time_series"
+        }
+      ],
+      "title": "Total Sightings Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "continuous-GrYlRd" },
+          "custom": { "fillOpacity": 70, "lineWidth": 0 },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 12 },
+      "id": 4,
+      "options": {
+        "alignValue": "left",
+        "legend": { "displayMode": "list", "placement": "bottom", "showLegend": false },
+        "mergeValues": true,
+        "rowHeight": 0.8,
+        "showValue": "never",
+        "tooltip": { "mode": "single", "sort": "none" }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "rawSql": "SELECT time, device_mac, 1 as present FROM ble_devices WHERE $__timeFilter(time) ORDER BY device_mac, time",
+          "refId": "A",
+          "format": "time_series"
+        }
+      ],
+      "title": "Device Presence Timeline",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "RSSI (dBm)",
+            "axisPlacement": "auto",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 3,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": { "mode": "off" }
+          },
+          "unit": "dBm"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 22 },
+      "id": 6,
+      "options": {
+        "legend": { "displayMode": "table", "placement": "right", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "rawSql": "SELECT time, device_mac, rssi FROM ble_devices WHERE $__timeFilter(time) AND rssi IS NOT NULL ORDER BY time",
+          "refId": "A",
+          "format": "time_series"
+        }
+      ],
+      "title": "Signal Strength (RSSI) by Device",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "continuous-BlYlRd" },
+          "custom": {
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "lineWidth": 1
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 22 },
+      "id": 5,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": true },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "rawSql": "SELECT device_mac, COUNT(*) as sightings FROM ble_devices WHERE $__timeFilter(time) GROUP BY device_mac ORDER BY sightings DESC LIMIT 15",
+          "refId": "A",
+          "format": "table"
+        }
+      ],
+      "title": "Top Devices by Sightings",
+      "type": "bargauge"
+    },
+    {
+      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "filterable": true,
+            "inspect": false
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "device_mac" },
+            "properties": [{ "id": "custom.width", "value": 180 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "first_seen" },
+            "properties": [{ "id": "unit", "value": "dateTimeAsLocal" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "last_seen" },
+            "properties": [{ "id": "unit", "value": "dateTimeAsLocal" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "avg_rssi" },
+            "properties": [{ "id": "unit", "value": "dBm" }]
+          }
+        ]
+      },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 30 },
+      "id": 7,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "enablePagination": true },
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "last_seen" }]
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "rawSql": "SELECT device_mac, MIN(time) as first_seen, MAX(time) as last_seen, COUNT(*) as total_sightings, ROUND(AVG(rssi)) as avg_rssi FROM ble_devices WHERE $__timeFilter(time) GROUP BY device_mac ORDER BY last_seen DESC",
+          "refId": "A",
+          "format": "table"
+        }
+      ],
+      "title": "Device Summary Table",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["ble", "bluetooth", "ruuvi", "tracking"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "BLE Device Tracking",
+  "uid": "ble-device-tracking",
+  "version": 1,
+  "weekStart": ""
+}
