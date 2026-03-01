@@ -59,6 +59,7 @@ services:
       - --node-id=node0
       - --object-store=file
       - --data-dir=/var/lib/influxdb3
+      - --query-file-limit=10000
     volumes:
       - influxdb3-data:/var/lib/influxdb3
     ports:
@@ -87,6 +88,67 @@ services:
     depends_on:
       - mosquitto
       - influxdb3
+    restart: always
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "192.168.1.111:53:53/tcp"
+      - "192.168.1.111:53:53/udp"
+      - 8053:80
+    environment:
+      TZ: Europe/Helsinki
+      FTLCONF_webserver_api_password: admin
+      FTLCONF_dns_listeningMode: all
+      FTLCONF_dns_upstreams: 193.229.0.40;193.229.0.42
+      FTLCONF_dns_hosts: 192.168.1.111 grafana.home;192.168.1.111 pihole.home;192.168.1.111 influxdb.home;192.168.1.111 loki.home;192.168.1.111 huoltokirja.home
+    volumes:
+      - pihole-etc:/etc/pihole
+      - pihole-dnsmasq:/etc/dnsmasq.d
+    restart: always
+
+  caddy:
+    container_name: caddy
+    image: caddy:2-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on:
+      - grafana
+      - pihole
+    restart: always
+
+  huoltokirja:
+    container_name: huoltokirja
+    image: ghcr.io/frogshead/huoltokirja:latest
+    environment:
+      DATABASE_URL: postgresql+asyncpg://huoltokirja:huoltokirja@huoltokirja-db:5432/huoltokirja
+      UPLOADS_DIR: /app/uploads
+      MAX_UPLOAD_SIZE_MB: 50
+    volumes:
+      - huoltokirja-uploads:/app/uploads
+    depends_on:
+      huoltokirja-db:
+        condition: service_healthy
+    restart: always
+
+  huoltokirja-db:
+    container_name: huoltokirja-db
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: huoltokirja
+      POSTGRES_PASSWORD: huoltokirja
+      POSTGRES_DB: huoltokirja
+    volumes:
+      - huoltokirja-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U huoltokirja"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     restart: always
 
   promtail:
@@ -122,4 +184,19 @@ volumes:
     external: false
 
   mosquitto-log:
+    external: false
+
+  pihole-etc:
+    external: false
+
+  pihole-dnsmasq:
+    external: false
+
+  caddy-data:
+    external: false
+
+  huoltokirja-postgres:
+    external: false
+
+  huoltokirja-uploads:
     external: false

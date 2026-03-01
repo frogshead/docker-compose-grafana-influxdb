@@ -19,7 +19,7 @@
   "links": [],
   "panels": [
     {
-      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -49,7 +49,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
           "rawSql": "SELECT COUNT(DISTINCT device_mac) as device_count FROM ble_devices WHERE time >= now() - INTERVAL '5 minutes'",
           "refId": "A",
           "format": "table"
@@ -59,7 +59,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -86,7 +86,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
           "rawSql": "SELECT COUNT(DISTINCT device_mac) as total_devices FROM ble_devices WHERE time >= now() - INTERVAL '24 hours'",
           "refId": "A",
           "format": "table"
@@ -96,7 +96,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -123,7 +123,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
           "rawSql": "SELECT COUNT(*) as sightings FROM ble_devices WHERE time >= now() - INTERVAL '1 hour'",
           "refId": "A",
           "format": "table"
@@ -133,7 +133,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -169,7 +169,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
           "rawSql": "SELECT date_bin('5 minutes', time) AS time, COUNT(DISTINCT device_mac) AS unique_devices FROM ble_devices WHERE $__timeFilter(time) GROUP BY date_bin('5 minutes', time) ORDER BY time",
           "refId": "A",
           "format": "time_series"
@@ -179,7 +179,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -215,7 +215,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
           "rawSql": "SELECT date_bin('5 minutes', time) AS time, COUNT(*) AS sightings FROM ble_devices WHERE $__timeFilter(time) GROUP BY date_bin('5 minutes', time) ORDER BY time",
           "refId": "A",
           "format": "time_series"
@@ -225,7 +225,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "continuous-GrYlRd" },
@@ -247,7 +247,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
           "rawSql": "SELECT time, device_mac, 1 as present FROM ble_devices WHERE $__timeFilter(time) ORDER BY device_mac, time",
           "refId": "A",
           "format": "time_series"
@@ -257,7 +257,7 @@
       "type": "state-timeline"
     },
     {
-      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -291,7 +291,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
           "rawSql": "SELECT time, device_mac, rssi FROM ble_devices WHERE $__timeFilter(time) AND rssi IS NOT NULL ORDER BY time",
           "refId": "A",
           "format": "time_series"
@@ -301,7 +301,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "continuous-BlYlRd" },
@@ -330,7 +330,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
           "rawSql": "SELECT device_mac, COUNT(*) as sightings FROM ble_devices WHERE $__timeFilter(time) GROUP BY device_mac ORDER BY sightings DESC LIMIT 15",
           "refId": "A",
           "format": "table"
@@ -340,7 +340,7 @@
       "type": "bargauge"
     },
     {
-      "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+      "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
       "fieldConfig": {
         "defaults": {
           "custom": {
@@ -384,7 +384,7 @@
       "pluginVersion": "12.0.2",
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "influxdbv3" },
+          "datasource": { "type": "influxdb", "uid": "PD41A8AE4AB660541" },
           "rawSql": "SELECT device_mac, MIN(time) as first_seen, MAX(time) as last_seen, COUNT(*) as total_sightings, ROUND(AVG(rssi)) as avg_rssi FROM ble_devices WHERE $__timeFilter(time) GROUP BY device_mac ORDER BY last_seen DESC",
           "refId": "A",
           "format": "table"

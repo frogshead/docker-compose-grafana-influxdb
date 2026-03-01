@@ -35,6 +35,30 @@ datasources:
     url: http://influxdb3:8181
     jsonData:
       version: SQL
-      database: ruuvi
+      dbName: ruuvi
+      insecureGrpc: true
+    secureJsonData:
+      token: %%INFLUXDB3_AUTH_TOKEN%%
+
+  - name: InfluxDB_v3_ble
+    type: influxdb
+    access: proxy
+    url: http://influxdb3:8181
+    jsonData:
+      version: SQL
+      dbName: ble
+      insecureGrpc: true
+    secureJsonData:
+      token: %%INFLUXDB3_AUTH_TOKEN%%
+
+  - name: InfluxDB_v3_scale
+    uid: influxdbv3scale
+    type: influxdb
+    access: proxy
+    url: http://influxdb3:8181
+    jsonData:
+      version: SQL
+      dbName: scale
+      insecureGrpc: true
     secureJsonData:
       token: %%INFLUXDB3_AUTH_TOKEN%%

@@ -1,0 +1,5 @@
+192.168.1.111 grafana.home
+192.168.1.111 pihole.home
+192.168.1.111 influxdb.home
+192.168.1.111 loki.home
+192.168.1.111 huoltokirja.home
